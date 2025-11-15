@@ -27,7 +27,7 @@ export default function Login() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="bee-logo">🐝</div>
-        <h1>HiveLearn</h1>
+        <h1>GrowthGuild</h1>
         <p className="tagline">Grow your skills together</p>
 
         <form onSubmit={handleSubmit} className="auth-form">

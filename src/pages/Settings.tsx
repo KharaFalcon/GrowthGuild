@@ -13,7 +13,7 @@ export default function Settings() {
       <nav className="navbar">
         <div className="navbar-brand">
           <span className="bee-icon">🐝</span>
-          <span>HiveLearn</span>
+          <span>GrowthGuild</span>
         </div>
         <div className="navbar-menu">
           <button className="nav-link" onClick={() => setPage('dashboard')}>← Back</button>
