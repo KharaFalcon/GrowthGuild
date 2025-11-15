@@ -1,0 +1,9 @@
+/* Dashboard Page Styles */
+.dashboard {
+  background: linear-gradient(135deg, var(--bee-light) 0%, #fffbf0 100%);
+}
+
+.dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
