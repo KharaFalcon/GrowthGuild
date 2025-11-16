@@ -20,22 +20,6 @@ User Journey:
 5. Click "Save Quiz"
 ```
 
-### ✨ AI-Powered Mode
-Describe a topic and let AI automatically generate quiz questions.
-
-```
-User Journey:
-1. Click "✨ Create Quiz" button
-2. Select "AI-Generated" mode
-3. Enter topic (e.g., "Photosynthesis")
-4. Choose difficulty: Easy/Medium/Hard
-5. Choose number of questions: 3-20
-6. Click "✨ Generate Questions"
-7. Review and edit if needed
-8. Click "💾 Save Quiz"
-```
-
----
 
 ## 🔥 Firebase Cloud Database
 
@@ -56,24 +40,6 @@ Your app now stores data **in the cloud** instead of just the browser:
 
 ---
 
-## 🤖 AI Quiz Generation
-
-Powered by **OpenAI** - automatically creates quiz questions:
-
-### How It Works:
-```
-User enters topic: "Photosynthesis"
-        ↓
-AI (OpenAI) analyzes topic
-        ↓
-Generates 5-20 multiple choice questions
-        ↓
-Questions are reviewed by user
-        ↓
-User can edit or regenerate
-        ↓
-Quiz is saved to Firebase
-```
 
 ### Quality:
 - ✅ Multiple choice format (4 options)
@@ -84,58 +50,12 @@ Quiz is saved to Firebase
 
 ---
 
-## 📊 Architecture
-
-```
-┌─────────────────────────────────────┐
-│         GrowthGuild App             │
-├─────────────────────────────────────┤
-│                                     │
-│  ┌──────────────────────────────┐   │
-│  │    Quiz Builder UI           │   │
-│  │  (Manual / AI Selection)     │   │
-│  └───────────┬──────────────────┘   │
-│              │                       │
-│      ┌───────┴────────┐             │
-│      │                │             │
-│  ┌───▼────┐      ┌────▼────┐       │
-│  │ Manual  │      │   AI    │       │
-│  │ Editor  │      │ Generator       │
-│  └────┬────┘      └────┬────┘       │
-│       │                │             │
-│       └────────┬───────┘             │
-│              │                       │
-│    ┌─────────▼──────────┐            │
-│    │ FirebaseContext    │            │
-│    │ (Save & Retrieve)  │            │
-│    └─────────┬──────────┘            │
-│              │                       │
-└──────────────┼───────────────────────┘
-               │
-        ┌──────▼──────────┐
-        │    Firebase     │
-        │   Firestore DB  │  🔥
-        │                 │
-        │ ├─ /users/      │
-        │ ├─ /quizzes/    │
-        │ └─ /results/    │
-        └─────────────────┘
-        
-Optional:
-        ┌──────────────────┐
-        │    OpenAI API    │  🤖
-        │  Quiz Generator  │
-        └──────────────────┘
-```
-
----
 
 ## 🎯 Key Features
 
 | Feature | Status | Notes |
 |---------|--------|-------|
 | **Manual Quiz Creation** | ✅ Complete | Full editing UI |
-| **AI Quiz Generation** | ✅ Complete | OpenAI integrated |
 | **Firebase Auth** | ✅ Complete | Email/Password login |
 | **Cloud Storage** | ✅ Complete | Firestore database |
 | **Question Editor** | ✅ Complete | Edit after AI generation |
@@ -178,10 +98,6 @@ Optional:
 - Create a new project
 - Copy your config to `.env.local`
 
-### 2️⃣ (Optional) Setup OpenAI (1 minute)
-- Get API key from [platform.openai.com](https://platform.openai.com)
-- Add to `.env.local`
-
 ### 3️⃣ Start the App
 ```bash
 npm run dev
@@ -201,12 +117,6 @@ npm run dev
 - **Free Tier**: 50,000 reads/writes per day
 - **Perfect for**: Development and small apps
 - **Cost**: $0-$6/month depending on usage
-
-### OpenAI
-- **Per Quiz**: ~$0.001 - $0.01 per generated quiz
-- **Example**: 100 quizzes = ~$0.10 - $1.00
-- **Cost**: Pay-as-you-go, no subscription required
-
 ---
 
 ## 🔐 Security
