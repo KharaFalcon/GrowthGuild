@@ -35,36 +35,55 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
   // Listen for auth state changes
   useEffect(() => {
     console.log('[Firebase] Initializing auth state listener...')
-    let isMounted = true
-    
-    // Add a timeout to prevent infinite loading
-    const timeout = setTimeout(() => {
-      if (isMounted && loading) {
-        console.warn('[Firebase] Auth check timeout - setting loading to false')
-        setLoading(false)
-      }
-    }, 5000)
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('[Firebase] Auth state changed:', user?.email || 'No user')
-      if (isMounted) {
-        setCurrentUser(user)
-        setLoading(false)
-      }
-      clearTimeout(timeout)
-    }, (err) => {
-      console.error('[Firebase] Auth error:', err)
-      if (isMounted) {
-        setError(err.message)
-        setLoading(false)
-      }
-      clearTimeout(timeout)
+    console.log('[Firebase] Config:', {
+      projectId: auth.app.options.projectId,
+      authDomain: auth.app.options.authDomain
     })
+    let isMounted = true
+    let timeoutCleared = false
+    
+    // Add a timeout to prevent infinite loading - reduced to 2 seconds
+    const timeout = setTimeout(() => {
+      if (isMounted && loading && !timeoutCleared) {
+        console.warn('[Firebase] Auth check timeout (2s) - setting loading to false, proceeding with no user')
+        timeoutCleared = true
+        setLoading(false)
+      }
+    }, 2000)
 
-    return () => {
-      isMounted = false
-      clearTimeout(timeout)
-      unsubscribe()
+    try {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        console.log('[Firebase] Auth state changed:', user?.email ? `Logged in as ${user.email}` : 'No user logged in')
+        if (isMounted && !timeoutCleared) {
+          setCurrentUser(user)
+          setLoading(false)
+          timeoutCleared = true
+          clearTimeout(timeout)
+        }
+      }, (err: any) => {
+        console.error('[Firebase] Auth error:', err?.code || err?.message || err)
+        if (isMounted && !timeoutCleared) {
+          setError(err?.message || 'Unknown Firebase error')
+          setLoading(false)
+          timeoutCleared = true
+          clearTimeout(timeout)
+        }
+      })
+
+      return () => {
+        isMounted = false
+        if (!timeoutCleared) {
+          clearTimeout(timeout)
+        }
+        unsubscribe()
+      }
+    } catch (err: any) {
+      console.error('[Firebase] Setup error:', err?.message || err)
+      if (isMounted && !timeoutCleared) {
+        setError(err?.message || 'Firebase initialization failed')
+        setLoading(false)
+        timeoutCleared = true
+      }
     }
   }, [])
 

@@ -36,16 +36,56 @@ function AppContent() {
 
   // Show error if Firebase connection fails
   if (error) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column', color: 'red' }}>
-      <p>Error: {error}</p>
-      <p style={{ fontSize: '12px', color: '#666' }}>Check your Firebase configuration</p>
+    return <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh', 
+      flexDirection: 'column', 
+      color: '#d32f2f',
+      fontFamily: 'sans-serif',
+      backgroundColor: '#fff9e6',
+      padding: '20px',
+      textAlign: 'center'
+    }}>
+      <p style={{ fontSize: '48px' }}>⚠️</p>
+      <p style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '0' }}>Firebase Error</p>
+      <p style={{ fontSize: '14px', color: '#666', maxWidth: '400px', margin: '10px 0' }}>{error}</p>
+      <p style={{ fontSize: '12px', color: '#999', marginTop: '20px' }}>
+        ✓ Check `.env.local` has correct Firebase credentials<br/>
+        ✓ Visit: https://console.firebase.google.com<br/>
+        ✓ Restart dev server: npm run dev
+      </p>
     </div>
   }
 
-  if (!currentUser) {
+  // If not loading and not logged in, show auth pages
+  if (!loading && !currentUser) {
     return page === 'login' ? <Login /> : <Register />
   }
 
+  // If loading, show loading state
+  if (loading) {
+    return <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh', 
+      flexDirection: 'column', 
+      fontFamily: 'sans-serif',
+      backgroundColor: '#fff9e6',
+      gap: '20px'
+    }}>
+      <div style={{ fontSize: '48px' }}>🐝</div>
+      <p style={{ fontSize: '18px', fontWeight: 'bold' }}>Loading GrowthGuild...</p>
+      <p style={{ fontSize: '12px', color: '#666' }}>Connecting to Firebase</p>
+      <div style={{ width: '100px', height: '3px', backgroundColor: '#FFD700', borderRadius: '2px', overflow: 'hidden' }}>
+        <div style={{ height: '100%', backgroundColor: '#FFC107', animation: 'pulse 1.5s infinite' }}></div>
+      </div>
+    </div>
+  }
+
+  // User is logged in, show app pages
   return (
     <>
       {page === 'dashboard' && <Dashboard />}
