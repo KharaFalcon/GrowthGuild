@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 
-type Page = 'login' | 'register' | 'dashboard' | 'profile' | 'friends' | 'settings' | 'courses' | 'hive'
+type Page = 'login' | 'register' | 'dashboard' | 'profile' | 'friends' | 'settings' | 'courses' | 'hive' | 'quiz-builder'
 
 type RouterContextType = {
   page: Page

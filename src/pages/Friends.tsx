@@ -14,7 +14,8 @@ export default function Friends() {
 
   if (!user) return null
 
-  const friends = getFriends(user.id)
+  const userId = user.id
+  const friends = getFriends(userId)
 
   function handleAddFriend() {
     setError('')
@@ -26,12 +27,12 @@ export default function Friends() {
     try {
       const usersRaw = localStorage.getItem('hive:users')
       const users = usersRaw ? JSON.parse(usersRaw) : []
-      const found = users.find((u: any) => u.username === username && u.id !== user.id)
+      const found = users.find((u: any) => u.username === username && u.id !== userId)
       if (!found) {
         setError('User not found')
         return
       }
-      if (addFriend(user.id, found)) {
+      if (addFriend(userId, found)) {
         setUsername('')
       } else {
         setError('Already friends with this user')
@@ -46,7 +47,7 @@ export default function Friends() {
       <nav className="navbar">
         <div className="navbar-brand">
           <span className="bee-icon">🐝</span>
-          <span>HiveLearn</span>
+          <span>GrowthGuild</span>
         </div>
         <div className="navbar-menu">
           <button className="nav-link" onClick={() => setPage('dashboard')}>← Back</button>
@@ -96,7 +97,7 @@ export default function Friends() {
                     </div>
                     <button
                       className="btn btn-danger"
-                      onClick={() => removeFriend(user.id, friend.userId)}
+                      onClick={() => removeFriend(userId, friend.userId)}
                     >
                       Remove
                     </button>

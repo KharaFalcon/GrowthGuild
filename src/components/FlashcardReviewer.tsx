@@ -16,8 +16,9 @@ export default function FlashcardReviewer({ flashcards }: Props) {
 
   if (!user || flashcards.length === 0) return null
 
+  const userId = user.id
   const current = flashcards[currentIndex]
-  const progress = getFlashcardProgressForUser(user.id, current.id)
+  const progress = getFlashcardProgressForUser(userId, current.id)
   const isMastered = mastered.has(current.id) || progress?.mastered
 
   function handleFlip() {
@@ -25,7 +26,7 @@ export default function FlashcardReviewer({ flashcards }: Props) {
   }
 
   function handleMastered() {
-    recordFlashcardReview(user.id, current.id)
+    recordFlashcardReview(userId, current.id)
     const updated = new Set(mastered)
     updated.add(current.id)
     setMastered(updated)

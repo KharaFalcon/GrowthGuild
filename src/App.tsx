@@ -4,6 +4,7 @@ import { HiveProvider } from './context/HiveContext'
 import { FriendsProvider } from './context/FriendsContext'
 import { LearningProvider } from './context/LearningContext'
 import { GuildProvider } from './context/GuildContext'
+import { FirebaseProvider } from './context/FirebaseContext'
 import { RouterProvider, useRouter } from './context/RouterContext'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -13,8 +14,9 @@ import Friends from './pages/Friends'
 import Settings from './pages/Settings'
 import Courses from './pages/Courses'
 import { HiveView } from './pages/HiveView'
+import QuizBuilder from './pages/QuizBuilder'
 
-type Page = 'login' | 'register' | 'dashboard' | 'profile' | 'friends' | 'settings' | 'courses' | 'hive'
+type Page = 'login' | 'register' | 'dashboard' | 'profile' | 'friends' | 'settings' | 'courses' | 'hive' | 'quiz-builder'
 
 function AppContent() {
   const { isAuthenticated } = useAuth()
@@ -36,6 +38,7 @@ function AppContent() {
       {page === 'settings' && <Settings />}
       {page === 'courses' && <Courses />}
       {page === 'hive' && <HiveView />}
+      {page === 'quiz-builder' && <QuizBuilder />}
     </>
   )
 }
@@ -44,18 +47,20 @@ export default function App() {
   const [page, setPage] = useState<Page>('login')
 
   return (
-    <AuthProvider>
-      <HiveProvider>
-        <FriendsProvider>
-          <LearningProvider>
-            <GuildProvider>
-              <RouterProvider page={page} setPage={setPage}>
-                <AppContent />
-              </RouterProvider>
-            </GuildProvider>
-          </LearningProvider>
-        </FriendsProvider>
-      </HiveProvider>
-    </AuthProvider>
+    <FirebaseProvider>
+      <AuthProvider>
+        <HiveProvider>
+          <FriendsProvider>
+            <LearningProvider>
+              <GuildProvider>
+                <RouterProvider page={page} setPage={setPage}>
+                  <AppContent />
+                </RouterProvider>
+              </GuildProvider>
+            </LearningProvider>
+          </FriendsProvider>
+        </HiveProvider>
+      </AuthProvider>
+    </FirebaseProvider>
   )
 }

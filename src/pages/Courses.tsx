@@ -53,7 +53,16 @@ export default function Courses() {
       <main className="courses-container">
         {contentType === 'courses' && (
           <section className="courses-hub">
-            <h1>📚 Learning Courses</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h1>📚 Learning Courses</h1>
+              <button
+                className="btn btn-primary"
+                onClick={() => setPage('quiz-builder')}
+                style={{ marginTop: 0 }}
+              >
+                ✨ Create Quiz
+              </button>
+            </div>
             <div className="courses-grid">
               {courses.map(course => {
                 const progress = getCourseProgressForUser(user.id, course.id)
