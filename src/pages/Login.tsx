@@ -1,25 +1,32 @@
 import React, { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useFirebase } from '../context/FirebaseContext'
 import { useRouter } from '../context/RouterContext'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login } = useFirebase()
   const { setPage } = useRouter()
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
-    if (!username || !password) {
-      setError('Username and password required')
+    
+    if (!email || !password) {
+      setError('Email and password required')
       return
     }
-    if (login(username, password)) {
+
+    setIsLoading(true)
+    try {
+      await login(email, password)
       setPage('dashboard')
-    } else {
-      setError('Invalid username or password')
+    } catch (err: any) {
+      setError(err.message || 'Login failed')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -32,13 +39,14 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="email">Email</label>
             <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              id="email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              disabled={isLoading}
             />
           </div>
 
@@ -50,13 +58,14 @@ export default function Login() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="Enter your password"
+              disabled={isLoading}
             />
           </div>
 
           {error && <div className="error-message">{error}</div>}
 
-          <button type="submit" className="btn btn-primary">
-            Log In
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
 

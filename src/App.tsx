@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { AuthProvider, useAuth } from './context/AuthContext'
+import { AuthProvider } from './context/AuthContext'
 import { HiveProvider } from './context/HiveContext'
 import { FriendsProvider } from './context/FriendsContext'
 import { LearningProvider } from './context/LearningContext'
 import { GuildProvider } from './context/GuildContext'
-import { FirebaseProvider } from './context/FirebaseContext'
+import { FirebaseProvider, useFirebase } from './context/FirebaseContext'
 import { RouterProvider, useRouter } from './context/RouterContext'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -19,14 +19,21 @@ import QuizBuilder from './pages/QuizBuilder'
 type Page = 'login' | 'register' | 'dashboard' | 'profile' | 'friends' | 'settings' | 'courses' | 'hive' | 'quiz-builder'
 
 function AppContent() {
-  const { isAuthenticated } = useAuth()
+  const { currentUser, loading } = useFirebase()
   const { page } = useRouter()
 
   React.useEffect(() => {
-    console.log('[GrowthGuild] AppContent rendered, page=', page, 'isAuthenticated=', isAuthenticated)
-  }, [page, isAuthenticated])
+    console.log('[GrowthGuild] AppContent rendered, page=', page, 'currentUser=', currentUser?.email)
+  }, [page, currentUser])
 
-  if (!isAuthenticated) {
+  // Show nothing while Firebase is loading
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <p>Loading...</p>
+    </div>
+  }
+
+  if (!currentUser) {
     return page === 'login' ? <Login /> : <Register />
   }
 

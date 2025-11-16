@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useFirebase } from '../context/FirebaseContext'
 import { useRouter } from '../context/RouterContext'
 
 export default function Register() {
-  const { register } = useAuth()
+  const { register } = useFirebase()
   const { setPage } = useRouter()
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
 
@@ -30,10 +31,14 @@ export default function Register() {
       return
     }
 
-    if (register(username, email, password)) {
+    setIsLoading(true)
+    try {
+      await register(email, password, username)
       setPage('dashboard')
-    } else {
-      setError('Username or email already exists')
+    } catch (err: any) {
+      setError(err.message || 'Registration failed')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -41,7 +46,7 @@ export default function Register() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="bee-logo">🐝</div>
-        <h1>Join HiveLearn</h1>
+        <h1>Join GrowthGuild</h1>
         <p className="tagline">Start learning with the hive</p>
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -53,6 +58,7 @@ export default function Register() {
               value={username}
               onChange={e => setUsername(e.target.value)}
               placeholder="Choose a username"
+              disabled={isLoading}
             />
           </div>
 
@@ -64,6 +70,7 @@ export default function Register() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="Enter your email"
+              disabled={isLoading}
             />
           </div>
 
@@ -75,6 +82,7 @@ export default function Register() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="Create a password"
+              disabled={isLoading}
             />
           </div>
 
@@ -86,13 +94,14 @@ export default function Register() {
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Confirm your password"
+              disabled={isLoading}
             />
           </div>
 
           {error && <div className="error-message">{error}</div>}
 
-          <button type="submit" className="btn btn-primary">
-            Create Account
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
