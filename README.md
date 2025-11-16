@@ -1,12 +1,11 @@
 # 🐝 Growth Guild — Gamified Learning Platform
 
-A beautiful, feature-rich learning platform where students earn collectible bees, expand their hive, and create their own quizzes—all powered by AI and Firebase!
+A beautiful learning platform where students earn collectible bees, expand their hive, and create their own quizzes—all powered by Firebase!
 
 ## ✨ What's New (v2.0)
 
 📚 **Student Quiz Creator** — Create quizzes manually or let AI generate them  
 🔥 **Firebase Cloud Database** — Persistent storage across devices  
-🤖 **AI Quiz Generation** — Powered by OpenAI  
 📱 **Responsive Design** — Works on mobile, tablet, desktop  
 
 [Read WHATS_NEW.md for detailed feature overview →](./WHATS_NEW.md)
@@ -36,9 +35,8 @@ See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) to add your Firebase credentials.
 
 ## ✨ Features (v2.0)
 
-- 📚 Student Quiz Creator (manual + AI-generated)
+- 📚 Student Quiz Creator 
 - 🔥 Firebase cloud database
-- 🤖 OpenAI quiz generation
 - 🐝 Collectible bees with perks
 - 🏰 Expandable hive
 - 🎮 Mini-games and rewards
@@ -49,13 +47,9 @@ See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) to add your Firebase credentials.
 
 ## 🔧 Setup
 
-### 1. Firebase (Required, 5 min)
+### 1. Firebase 
 - Create account: [firebase.google.com](https://firebase.google.com)
 - Add credentials to `.env.local`
-
-### 2. OpenAI (Optional, 2 min)
-- Get API key: [platform.openai.com](https://platform.openai.com)
-- Cost: ~$0.001-0.01 per quiz
 
 [Detailed setup →](./FIREBASE_SETUP.md)
 
