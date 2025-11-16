@@ -34,11 +34,38 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
 
   // Listen for auth state changes
   useEffect(() => {
+    console.log('[Firebase] Initializing auth state listener...')
+    let isMounted = true
+    
+    // Add a timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (isMounted && loading) {
+        console.warn('[Firebase] Auth check timeout - setting loading to false')
+        setLoading(false)
+      }
+    }, 5000)
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user)
-      setLoading(false)
+      console.log('[Firebase] Auth state changed:', user?.email || 'No user')
+      if (isMounted) {
+        setCurrentUser(user)
+        setLoading(false)
+      }
+      clearTimeout(timeout)
+    }, (err) => {
+      console.error('[Firebase] Auth error:', err)
+      if (isMounted) {
+        setError(err.message)
+        setLoading(false)
+      }
+      clearTimeout(timeout)
     })
-    return unsubscribe
+
+    return () => {
+      isMounted = false
+      clearTimeout(timeout)
+      unsubscribe()
+    }
   }, [])
 
   const login = async (email: string, password: string) => {

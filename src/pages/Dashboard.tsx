@@ -1,26 +1,27 @@
 import React, { useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useFirebase } from '../context/FirebaseContext'
 import { useHive } from '../context/HiveContext'
 import { useGuild } from '../context/GuildContext'
 import { useRouter } from '../context/RouterContext'
 import Badge from '../components/Badge'
 
 export default function Dashboard() {
-  const { user, logout } = useAuth()
+  const { currentUser, logout } = useFirebase()
   const { getBadgesForUser, getProgressForUser, toggleBadge } = useHive()
   const { guildHive, initializeGuild } = useGuild()
   const { setPage } = useRouter()
 
   useEffect(() => {
-    if (user && !guildHive) {
-      initializeGuild(user.id, `${user.username}'s Hive`)
+    if (currentUser && !guildHive) {
+      // Use Firebase user UID as the user ID
+      initializeGuild(currentUser.uid, `${currentUser.email}'s Hive`)
     }
-  }, [user, guildHive, initializeGuild])
+  }, [currentUser, guildHive, initializeGuild])
 
-  if (!user) return null
+  if (!currentUser) return null
 
-  const badges = getBadgesForUser(user.id)
-  const progress = getProgressForUser(user.id)
+  const badges = getBadgesForUser(currentUser.uid)
+  const progress = getProgressForUser(currentUser.uid)
 
   return (
     <div className="dashboard">
@@ -44,9 +45,9 @@ export default function Dashboard() {
       <main className="dashboard-content">
         <section className="dashboard-header">
           <div className="user-greeting">
-            <div className="user-avatar">{user.profileIcon}</div>
+            <div className="user-avatar">🐝</div>
             <div>
-              <h1>Welcome, {user.username}! 🐝</h1>
+              <h1>Welcome, {currentUser.email}! 🐝</h1>
               <p>Keep learning and earning badges</p>
             </div>
           </div>
@@ -69,7 +70,7 @@ export default function Dashboard() {
               <Badge
                 key={badge.id}
                 badge={badge}
-                onToggle={() => toggleBadge(user.id, badge.id)}
+                onToggle={() => toggleBadge(currentUser.uid, badge.id)}
               />
             ))}
           </div>

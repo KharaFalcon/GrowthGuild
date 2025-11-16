@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useGuild } from '../context/GuildContext'
-import { useAuth } from '../context/AuthContext'
+import { useFirebase } from '../context/FirebaseContext'
 import { useRouter } from '../context/RouterContext'
 
 export function HiveView() {
   const { guildHive, beeSpecies, assignBeeToRoom, removeBeeFromRoom, renameBee, unlockRoom } =
     useGuild()
-  const { user } = useAuth()
+  const { currentUser } = useFirebase()
   const { setPage } = useRouter()
 
   const [selectedBee, setSelectedBee] = useState<string | null>(null)
@@ -37,8 +37,8 @@ export function HiveView() {
   }
 
   function handleRenameBee() {
-    if (selectedBee && user) {
-      renameBee(user.id, selectedBee, newNickname)
+    if (selectedBee && currentUser) {
+      renameBee(currentUser.uid, selectedBee, newNickname)
       setShowRenameModal(false)
       setNewNickname('')
       setSelectedBee(null)
@@ -46,8 +46,8 @@ export function HiveView() {
   }
 
   function handleUnlockRoom() {
-    if (user) {
-      unlockRoom(user.id)
+    if (currentUser) {
+      unlockRoom(currentUser.uid)
     }
   }
 
@@ -95,7 +95,7 @@ export function HiveView() {
                             <button
                               className="remove-bee-btn"
                               onClick={() => {
-                                if (user && beeId) removeBeeFromRoom(user.id, beeId)
+                                if (currentUser && beeId) removeBeeFromRoom(currentUser.uid, beeId)
                               }}
                             >
                               ✕
@@ -230,13 +230,13 @@ export function HiveView() {
                           <button
                             className="action-btn assign-btn"
                             onClick={() => {
-                              if (user && guildHive.rooms.some(r => r.level > 0)) {
+                              if (currentUser && guildHive.rooms.some(r => r.level > 0)) {
                                 // Auto-assign to first available room
                                 const availableRoom = guildHive.rooms.find(
                                   r => r.level > 0 && r.inhabitants.length < r.capacity
                                 )
-                                if (availableRoom && user) {
-                                  assignBeeToRoom(user.id, bee.id, availableRoom.id)
+                                if (availableRoom && currentUser) {
+                                  assignBeeToRoom(currentUser.uid, bee.id, availableRoom.id)
                                   setSelectedBee(null)
                                 }
                               }
@@ -248,8 +248,8 @@ export function HiveView() {
                           <button
                             className="action-btn remove-btn"
                             onClick={() => {
-                              if (user) {
-                                removeBeeFromRoom(user.id, bee.id)
+                              if (currentUser) {
+                                removeBeeFromRoom(currentUser.uid, bee.id)
                                 setSelectedBee(null)
                               }
                             }}

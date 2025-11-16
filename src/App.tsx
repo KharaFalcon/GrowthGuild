@@ -19,17 +19,26 @@ import QuizBuilder from './pages/QuizBuilder'
 type Page = 'login' | 'register' | 'dashboard' | 'profile' | 'friends' | 'settings' | 'courses' | 'hive' | 'quiz-builder'
 
 function AppContent() {
-  const { currentUser, loading } = useFirebase()
+  const { currentUser, loading, error } = useFirebase()
   const { page } = useRouter()
 
   React.useEffect(() => {
-    console.log('[GrowthGuild] AppContent rendered, page=', page, 'currentUser=', currentUser?.email)
-  }, [page, currentUser])
+    console.log('[GrowthGuild] AppContent rendered, page=', page, 'currentUser=', currentUser?.email, 'loading=', loading, 'error=', error)
+  }, [page, currentUser, loading, error])
 
-  // Show nothing while Firebase is loading
+  // Show loading state
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
       <p>Loading...</p>
+      <p style={{ fontSize: '12px', color: '#666' }}>Connecting to Firebase...</p>
+    </div>
+  }
+
+  // Show error if Firebase connection fails
+  if (error) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column', color: 'red' }}>
+      <p>Error: {error}</p>
+      <p style={{ fontSize: '12px', color: '#666' }}>Check your Firebase configuration</p>
     </div>
   }
 
